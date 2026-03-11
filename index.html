@@ -9,21 +9,23 @@
   <style>
     /* ── TOKENS ── */
     :root {
-      --bg:       #060E1C;
-      --text:     #C8D4E8;
-      --text-dim: #8899BB;
-      --accent:   #E8A020;
-      --border:   rgba(200,212,232,0.1);
-      --card-bg:  rgba(200,212,232,0.04);
+      --bg:         #060E1C;
+      --text:       #C8D4E8;
+      --text-title: #FFFFFF;
+      --text-dim:   #8899BB;
+      --accent:     #E8A020;
+      --border:     rgba(200,212,232,0.1);
+      --card-bg:    rgba(200,212,232,0.04);
       --logo-filter: none;
     }
     [data-theme="light"] {
-      --bg:       #F2EDE3;
-      --text:     #060E1C;
-      --text-dim: #5a6580;
-      --accent:   #E8A020;
-      --border:   rgba(6,14,28,0.12);
-      --card-bg:  rgba(6,14,28,0.04);
+      --bg:         #F2EDE3;
+      --text:       #060E1C;
+      --text-title: #060E1C;
+      --text-dim:   #5a6580;
+      --accent:     #E8A020;
+      --border:     rgba(6,14,28,0.12);
+      --card-bg:    rgba(6,14,28,0.04);
       --logo-filter: none;
     }
 
@@ -436,6 +438,10 @@
       width: 4px; height: 2px;
       background: var(--text-dim); border-radius: 1px;
     }
+
+    h1, h2 {
+  color: #FFFFFF;
+}
   </style>
 </head>
 <body>
