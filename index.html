@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>airside.design — Aviation Objects for Your Desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@200;300;400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:       #060E1C;
+      --text:     #C8D4E8;
+      --text-dim: #8899BB;
+      --accent:   #E8A020;
+      --border:   rgba(200,212,232,0.1);
+      --card-bg:  rgba(200,212,232,0.04);
+      --logo-filter: none;
+    }
+    [data-theme="light"] {
+      --bg:       #F2EDE3;
+      --text:     #060E1C;
+      --text-dim: #5a6580;
+      --accent:   #E8A020;
+      --border:   rgba(6,14,28,0.12);
+      --card-bg:  rgba(6,14,28,0.04);
+      --logo-filter: none;
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.35s, color 0.35s;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw;
+      height: 64px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.35s;
+    }
+    .nav-logo { height: 28px; display: block; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-right { display: flex; align-items: center; gap: 1.2rem; }
+    .theme-toggle {
+      background: none; border: 1px solid var(--border);
+      color: var(--text-dim); cursor: pointer;
+      width: 36px; height: 36px; border-radius: 50%;
+      font-size: 1rem; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-etsy {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 0.8rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: var(--accent); color: #060E1C;
+      border: none; padding: 0.5rem 1.2rem; border-radius: 2px;
+      cursor: pointer; text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .btn-etsy:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100svh;
+      padding: 64px 5vw 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -20%; right: -10%;
+      width: 65vw; height: 65vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,160,32,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.5rem;
+    }
+    .hero-heading {
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      font-weight: 900; line-height: 0.92;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.2em;
+    }
+    .hero-heading span { color: var(--accent); }
+    .hero-sub {
+      font-size: 1.15rem; font-weight: 300;
+      color: var(--text-dim); line-height: 1.6;
+      max-width: 40ch;
+      margin-top: 1.5rem; margin-bottom: 2.5rem;
+    }
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 0.9rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      background: var(--accent); color: #060E1C;
+      border: none; padding: 0.85rem 2rem; border-radius: 2px;
+      cursor: pointer; text-decoration: none; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-ghost {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 400; font-size: 0.9rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: none; border: 1px solid var(--border);
+      color: var(--text); padding: 0.85rem 2rem; border-radius: 2px;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-visual {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-img-wrap {
+      position: relative;
+      width: min(420px, 45vw);
+      aspect-ratio: 1;
+    }
+    .hero-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; border-radius: 3px;
+    }
+    .hero-img-badge {
+      position: absolute; bottom: -1.5rem; left: -1.5rem;
+      background: var(--accent); color: #060E1C;
+      padding: 0.7rem 1.2rem;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .hero-scroll-hint {
+      position: absolute; bottom: 3rem; left: 5vw;
+      font-size: 0.7rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text-dim);
+      display: flex; align-items: center; gap: 0.7rem;
+    }
+    .hero-scroll-hint::before {
+      content: ''; display: block;
+      width: 32px; height: 1px;
+      background: var(--accent);
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 7rem 5vw; }
+    .section-tag {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+    }
+    .section-heading {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 900; text-transform: uppercase;
+      line-height: 0.95; margin-bottom: 1.5rem;
+    }
+    .section-text {
+      font-size: 1.1rem; font-weight: 300;
+      color: var(--text-dim); line-height: 1.65;
+      max-width: 60ch;
+    }
+    hr.divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ── PRODUCT: TAXIWAY ── */
+    #taxiway {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .product-meta { display: flex; flex-direction: column; }
+    .product-specs {
+      margin-top: 2.5rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      border: 1px solid var(--border);
+    }
+    .spec-item {
+      padding: 1rem 1.2rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .spec-item:nth-child(even) { border-right: none; }
+    .spec-item:nth-last-child(-n+2) { border-bottom: none; }
+    .spec-label {
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.4rem;
+    }
+    .spec-val { font-size: 0.95rem; font-weight: 300; }
+
+    .product-img-stack {
+      position: relative;
+      display: flex; align-items: flex-start; justify-content: flex-end;
+    }
+    .img-main {
+      width: 100%; max-width: 420px;
+      aspect-ratio: 4/3;
+      object-fit: cover; border-radius: 2px;
+      display: block;
+    }
+    .img-placeholder {
+      width: 100%; max-width: 420px;
+      aspect-ratio: 4/3;
+      background: var(--card-bg);
+      border: 1px dashed var(--border);
+      border-radius: 2px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.5rem;
+      color: var(--text-dim);
+    }
+    .img-placeholder svg { opacity: 0.3; }
+    .img-placeholder span {
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase; opacity: 0.5;
+    }
+
+    /* ── PRODUCT: COASTERS ── */
+    #coasters { background: var(--card-bg); }
+    .coasters-inner {
+      max-width: 1400px; margin: 0 auto;
+    }
+    .coasters-header {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; margin-bottom: 4rem;
+      align-items: end;
+    }
+    .coasters-header .section-text { max-width: 48ch; }
+
+    /* airport grid */
+    .airport-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1.2rem;
+      margin-bottom: 3rem;
+    }
+    .airport-card {
+      aspect-ratio: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: border-color 0.2s;
+      cursor: default;
+    }
+    .airport-card:hover { border-color: var(--accent); }
+    .airport-iata {
+      font-size: 1.4rem; font-weight: 900;
+      letter-spacing: 0.05em;
+    }
+    .airport-city {
+      font-size: 0.6rem; font-weight: 300;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-dim); margin-top: 0.1rem;
+    }
+    .coasters-coming {
+      font-size: 0.75rem; font-weight: 400;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-dim); margin-top: 0.5rem;
+    }
+
+    /* photo row */
+    .coaster-photos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 3rem;
+    }
+    .coaster-photos .img-placeholder { max-width: none; width: 100%; }
+
+    /* ── ACRYLIC VARIANTS ── */
+    #acrylic { }
+    .acrylic-inner { max-width: 1400px; margin: 0 auto; }
+    .acrylic-header {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; margin-bottom: 4rem;
+      align-items: end;
+    }
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+    }
+    .swatch {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      position: relative;
+      cursor: default;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .swatch:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .swatch-label {
+      font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-dim);
+      text-align: center; margin-top: 0.5rem;
+    }
+    .palette-note {
+      font-size: 0.85rem; font-weight: 300;
+      color: var(--text-dim); line-height: 1.6;
+      max-width: 55ch;
+    }
+
+    /* ── MADE IN HH ── */
+    #made {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+    }
+    .made-text .section-text { max-width: 45ch; }
+    .made-facts {
+      margin-top: 2.5rem;
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .fact {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1.2rem;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s;
+    }
+    .fact:hover { border-color: var(--accent); }
+    .fact-num {
+      font-size: 2rem; font-weight: 900;
+      color: var(--accent); line-height: 1; flex-shrink: 0;
+    }
+    .fact-body { }
+    .fact-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .fact-desc { font-size: 0.9rem; font-weight: 300; color: var(--text-dim); }
+
+    .made-visual .img-placeholder {
+      max-width: none; width: 100%;
+      aspect-ratio: 3/4;
+    }
+
+    /* ── ETSY CTA ── */
+    #shop {
+      text-align: center;
+      background: var(--card-bg);
+      padding: 8rem 5vw;
+    }
+    #shop .section-heading { margin-bottom: 1rem; }
+    #shop .section-text { margin: 0 auto 3rem; text-align: center; }
+    .btn-etsy-large {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      background: var(--accent); color: #060E1C;
+      border: none; padding: 1.1rem 3rem; border-radius: 2px;
+      cursor: pointer; text-decoration: none; transition: opacity 0.2s;
+    }
+    .btn-etsy-large:hover { opacity: 0.85; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2.5rem 5vw;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem; font-weight: 300;
+      color: var(--text-dim); letter-spacing: 0.08em;
+    }
+    footer img { height: 22px; opacity: 0.6; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; padding-top: 80px; }
+      .hero-visual { display: none; }
+      #taxiway { grid-template-columns: 1fr; }
+      .product-img-stack { justify-content: flex-start; }
+      .coasters-header { grid-template-columns: 1fr; gap: 2rem; }
+      .acrylic-header { grid-template-columns: 1fr; gap: 2rem; }
+      .airport-grid { grid-template-columns: repeat(3, 1fr); }
+      .palette-grid { grid-template-columns: repeat(4, 1fr); }
+      #made { grid-template-columns: 1fr; }
+      .made-visual { display: none; }
+      .coaster-photos { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-up {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+
+    /* runway decoration */
+    .runway-deco {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .runway-strip {
+      height: 2px; background: var(--accent);
+      flex: 1; max-width: 48px;
+    }
+    .runway-dots {
+      display: flex; gap: 4px;
+    }
+    .runway-dot {
+      width: 4px; height: 2px;
+      background: var(--text-dim); border-radius: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#hero">
+    <img id="nav-logo" class="nav-logo" src="" alt="airside.design" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#taxiway">Taxiway Signs</a></li>
+    <li><a href="#coasters">Coasters</a></li>
+    <li><a href="#acrylic">Acrylic Series</a></li>
+    <li><a href="#made">Studio</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☀</button>
+    <a href="https://www.etsy.com" target="_blank" class="btn-etsy">Shop on Etsy</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-content fade-up">
+    <p class="hero-tag">Handmade in Hamburg · Aviation Design</p>
+    <h1 class="hero-heading">Objects<br>for the<br><span>Runway</span><br>Ahead.</h1>
+    <p class="hero-sub">Authentic aviation objects for pilots, controllers and enthusiasts. 3D-printed, UV-printed and assembled by hand in Hamburg.</p>
+    <div class="hero-cta">
+      <a href="#taxiway" class="btn-primary">Explore Products</a>
+      <a href="https://www.etsy.com" target="_blank" class="btn-ghost">Shop on Etsy</a>
+    </div>
+  </div>
+  <div class="hero-visual fade-up" style="transition-delay:0.15s">
+    <div class="hero-img-wrap">
+      <!-- PRODUCT PHOTO: Taxiway Sign hero shot -->
+      <div class="img-placeholder" style="width:100%;aspect-ratio:1;border-radius:3px;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/>
+        </svg>
+        <span>Hero Product Image</span>
+      </div>
+      <div class="hero-img-badge">Handmade in Hamburg</div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">Scroll to explore</div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── TAXIWAY SIGNS ── -->
+<section style="padding: 7rem 5vw;">
+  <div id="taxiway">
+    <div class="product-meta fade-up">
+      <p class="section-tag">Product 01</p>
+      <div class="runway-deco">
+        <div class="runway-strip"></div>
+        <div class="runway-dots">
+          <div class="runway-dot"></div><div class="runway-dot"></div>
+          <div class="runway-dot"></div><div class="runway-dot"></div>
+        </div>
+      </div>
+      <h2 class="section-heading">Taxiway<br>Signs</h2>
+      <p class="section-text">Illuminated desktop replicas based on real ICAO standards — or fully personalised with a name of your choice. The soft glow of UV-printed acrylic makes every desk feel like a real apron.</p>
+      <div class="product-specs">
+        <div class="spec-item">
+          <div class="spec-label">Material</div>
+          <div class="spec-val">3D-printed housing + UV-printed acrylic</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Power</div>
+          <div class="spec-val">USB-C (no battery)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Controls</div>
+          <div class="spec-val">On / Off switch</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Custom</div>
+          <div class="spec-val">Any text on request</div>
+        </div>
+      </div>
+    </div>
+    <div class="product-img-stack fade-up" style="transition-delay:0.1s">
+      <!-- PRODUCT PHOTO: Taxiway Sign lit up on desk -->
+      <div class="img-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <rect x="2" y="7" width="20" height="10" rx="1"/><path d="M7 7V5M17 7V5M12 17v2"/>
+        </svg>
+        <span>Taxiway Sign — lit</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── COASTERS ── -->
+<section id="coasters">
+  <div class="coasters-inner">
+    <div class="coasters-header">
+      <div class="fade-up">
+        <p class="section-tag">Product 02</p>
+        <div class="runway-deco">
+          <div class="runway-strip"></div>
+          <div class="runway-dots">
+            <div class="runway-dot"></div><div class="runway-dot"></div>
+            <div class="runway-dot"></div><div class="runway-dot"></div>
+          </div>
+        </div>
+        <h2 class="section-heading">Airport<br>Coasters</h2>
+      </div>
+      <div class="fade-up" style="transition-delay:0.1s">
+        <p class="section-text">Ceramic coasters UV-printed in one colour, based on real aeronautical charts. The runway geometry is extracted directly from official approach plates — so every coaster is an accurate miniature of the real airport layout.</p>
+        <p class="coasters-coming" style="margin-top:1.5rem">Coming soon: World Airports · 6 per continent · Custom airport on request</p>
+      </div>
+    </div>
+
+    <p class="section-tag fade-up">German Airports Series</p>
+    <div class="airport-grid fade-up" style="transition-delay:0.05s">
+      <div class="airport-card"><span class="airport-iata">FRA</span><span class="airport-city">Frankfurt</span></div>
+      <div class="airport-card"><span class="airport-iata">MUC</span><span class="airport-city">München</span></div>
+      <div class="airport-card"><span class="airport-iata">BER</span><span class="airport-city">Berlin</span></div>
+      <div class="airport-card"><span class="airport-iata">DUS</span><span class="airport-city">Düsseldorf</span></div>
+      <div class="airport-card"><span class="airport-iata">HAM</span><span class="airport-city">Hamburg</span></div>
+      <div class="airport-card"><span class="airport-iata">CGN</span><span class="airport-city">Köln</span></div>
+    </div>
+
+    <div class="coaster-photos fade-up">
+      <!-- PRODUCT PHOTO: Ceramic coaster top view -->
+      <div class="img-placeholder" style="aspect-ratio:4/3;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/>
+        </svg>
+        <span>Coaster — top view</span>
+      </div>
+      <!-- PRODUCT PHOTO: Coaster in context / lifestyle -->
+      <div class="img-placeholder" style="aspect-ratio:4/3;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8l4 4-4 4"/>
+        </svg>
+        <span>Coaster — lifestyle shot</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── ACRYLIC SERIES ── -->
+<section id="acrylic">
+  <div class="acrylic-inner">
+    <div class="acrylic-header">
+      <div class="fade-up">
+        <p class="section-tag">Coming Soon</p>
+        <div class="runway-deco">
+          <div class="runway-strip"></div>
+          <div class="runway-dots">
+            <div class="runway-dot"></div><div class="runway-dot"></div>
+            <div class="runway-dot"></div><div class="runway-dot"></div>
+          </div>
+        </div>
+        <h2 class="section-heading">Acrylic<br>Coasters</h2>
+      </div>
+      <div class="fade-up" style="transition-delay:0.1s">
+        <p class="section-text">The next evolution: UV rear-printed acrylic glass in bold solid colours. The runway diagram and text appear in crisp white against a vibrant background — the same airport data, a completely new energy. Available in 12 carefully selected colours.</p>
+        <p class="palette-note" style="margin-top:1.2rem;">Each colour is paired with a specific aviation atmosphere — from midnight approach to coastal IFR morning. Exact availability and pricing announced soon.</p>
+      </div>
+    </div>
+
+    <p class="section-tag fade-up" style="margin-bottom:1.2rem;">Colour Palette — 12 Shades</p>
+    <div class="palette-grid fade-up" style="transition-delay:0.05s">
+      <!-- Row 1: Darks & Neutrals -->
+      <div>
+        <div class="swatch" style="background:#0D1B2A;" title="Midnight Approach"></div>
+        <div class="swatch-label">Midnight</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#1B2B3A;" title="Radar Blue"></div>
+        <div class="swatch-label">Radar</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#2C3E50;" title="Overcast"></div>
+        <div class="swatch-label">Overcast</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#1A3A2A;" title="Tower Green"></div>
+        <div class="swatch-label">Tower</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#3D1A1A;" title="Alert Red"></div>
+        <div class="swatch-label">Alert</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#2A1A3D;" title="ILS Purple"></div>
+        <div class="swatch-label">ILS</div>
+      </div>
+      <!-- Row 2: Mids & Brights -->
+      <div>
+        <div class="swatch" style="background:#1C6B8A;" title="Coastal IFR"></div>
+        <div class="swatch-label">Coastal</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#3A7D44;" title="Foxtrot Green"></div>
+        <div class="swatch-label">Foxtrot</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#C0392B;" title="Delta Red"></div>
+        <div class="swatch-label">Delta</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#E8A020;" title="Amber Taxiway"></div>
+        <div class="swatch-label">Amber</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#566573;" title="Apron Grey"></div>
+        <div class="swatch-label">Apron</div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#D4C5B0;" title="Sandstorm VFR"></div>
+        <div class="swatch-label">Sandstorm</div>
+      </div>
+    </div>
+
+    <div class="coaster-photos fade-up" style="grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+      <!-- PRODUCT MOCKUP: Acrylic coaster dark -->
+      <div class="img-placeholder" style="aspect-ratio:1;max-width:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="12" cy="12" r="9"/></svg>
+        <span>Acrylic — dark</span>
+      </div>
+      <!-- PRODUCT MOCKUP: Acrylic coaster amber -->
+      <div class="img-placeholder" style="aspect-ratio:1;max-width:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="12" cy="12" r="9"/></svg>
+        <span>Acrylic — amber</span>
+      </div>
+      <!-- PRODUCT MOCKUP: Acrylic coaster red -->
+      <div class="img-placeholder" style="aspect-ratio:1;max-width:none;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <circle cx="12" cy="12" r="9"/></svg>
+        <span>Acrylic — red</span>
+      </div>
+    </div>
+    <style>
+      @media(max-width:900px){
+        .coaster-photos[style*="grid-template-columns:1fr 1fr 1fr"]{
+          grid-template-columns:1fr 1fr !important;
+        }
+      }
+    </style>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── MADE IN HH ── -->
+<section style="padding:7rem 5vw;">
+  <div id="made">
+    <div class="made-text fade-up">
+      <p class="section-tag">Studio</p>
+      <div class="runway-deco">
+        <div class="runway-strip"></div>
+        <div class="runway-dots">
+          <div class="runway-dot"></div><div class="runway-dot"></div>
+          <div class="runway-dot"></div><div class="runway-dot"></div>
+        </div>
+      </div>
+      <h2 class="section-heading">Made in<br>Hamburg.</h2>
+      <p class="section-text">Every piece is designed, printed and assembled by hand in Hamburg — the city with one of the most recognisable runway diagrams in the world. Small batches, real care.</p>
+      <div class="made-facts">
+        <div class="fact">
+          <div class="fact-num">01</div>
+          <div class="fact-body">
+            <div class="fact-title">Real Chart Data</div>
+            <div class="fact-desc">Airport runway geometries derived from official aeronautical charts for maximum accuracy.</div>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-num">02</div>
+          <div class="fact-body">
+            <div class="fact-title">3D Printed Housing</div>
+            <div class="fact-desc">Sign enclosures FDM-printed and hand-finished. UV-printed acrylic backlit diffuser.</div>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-num">03</div>
+          <div class="fact-body">
+            <div class="fact-title">Custom Orders Welcome</div>
+            <div class="fact-desc">Any IATA code, any name on a taxiway sign. Contact via Etsy message.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="made-visual fade-up" style="transition-delay:0.1s">
+      <!-- STUDIO / PROCESS PHOTO -->
+      <div class="img-placeholder" style="max-width:none;width:100%;aspect-ratio:3/4;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Studio / Process Photo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── SHOP CTA ── -->
+<section id="shop" class="fade-up">
+  <p class="section-tag">Where to Buy</p>
+  <h2 class="section-heading">Find us on Etsy.</h2>
+  <p class="section-text">Browse all current products, order custom pieces and get in touch directly via Etsy messages.</p>
+  <a href="https://www.etsy.com" target="_blank" class="btn-etsy-large">Open Etsy Shop →</a>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <img id="footer-logo" src="" alt="airside.design" />
+  <span>© 2025 airside.design · Hamburg</span>
+  <span>Handmade aviation objects</span>
+</footer>
+
+<!-- ── SCRIPTS ── -->
+<script>
+  // Logo SVG inline (embedded so it works locally on GitHub Pages)
+  const LOGO_DARK = `<svg viewBox="0 0 9449 9449" xmlns="http://www.w3.org/2000/svg" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g><rect width="9448.82" height="9448.82" style="fill:rgb(6,14,28);"/><g transform="matrix(1,0,0,1,-2120.56,1682.44)"><g transform="matrix(2133.33,0,0,2133.33,3515.01,3419.49)"><path d="M0.341,-0C0.331,-0 0.326,-0.005 0.325,-0.014L0.314,-0.089C0.314,-0.09 0.313,-0.092 0.312,-0.093C0.311,-0.094 0.309,-0.095 0.307,-0.095L0.219,-0.095C0.217,-0.095 0.215,-0.094 0.214,-0.093C0.213,-0.092 0.212,-0.09 0.212,-0.089L0.202,-0.014C0.201,-0.005 0.196,-0 0.186,-0L0.029,-0C0.018,-0 0.014,-0.005 0.016,-0.016L0.158,-0.687C0.16,-0.696 0.166,-0.7 0.175,-0.7L0.357,-0.7C0.366,-0.7 0.372,-0.696 0.374,-0.687L0.516,-0.016L0.516,-0.012C0.516,-0.004 0.511,-0 0.502,-0L0.341,-0ZM0.234,-0.245C0.234,-0.241 0.236,-0.239 0.239,-0.239L0.286,-0.239C0.291,-0.239 0.292,-0.241 0.291,-0.245L0.264,-0.425C0.263,-0.428 0.262,-0.429 0.261,-0.429C0.26,-0.429 0.259,-0.428 0.258,-0.425L0.234,-0.245Z" style="fill:white;fill-rule:nonzero;"/></g><g transform="matrix(2133.33,0,0,2133.33,4647.81,3419.49)"><path d="M0.041,-0C0.036,-0 0.033,-0.001 0.03,-0.004C0.027,-0.007 0.026,-0.01 0.026,-0.015L0.026,-0.685C0.026,-0.69 0.027,-0.693 0.03,-0.696C0.033,-0.699 0.036,-0.7 0.041,-0.7L0.199,-0.7C0.204,-0.7 0.207,-0.699 0.21,-0.696C0.213,-0.693 0.214,-0.69 0.214,-0.685L0.214,-0.015C0.214,-0.01 0.213,-0.007 0.21,-0.004C0.207,-0.001 0.204,-0 0.199,-0L0.041,-0Z" style="fill:white;fill-rule:nonzero;"/></g></g></g></svg>`;
+
+  // Use the uploaded SVG files as img src using the file paths
+  // For GitHub Pages deployment, user should place logos in /assets/
+  // We'll use object URLs from the uploads for the preview
+
+  // Theme switching
+  const html = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const navLogo = document.getElementById('nav-logo');
+  const footerLogo = document.getElementById('footer-logo');
+
+  // Point to the SVG files (for GH Pages these would be in /assets/)
+  const logoDarkSrc  = 'Logo_Dark_svg.svg';
+  const logoLightSrc = 'Logo_light_svg.svg';
+
+  function applyTheme(theme) {
+    html.dataset.theme = theme;
+    toggle.textContent = theme === 'dark' ? '☀' : '☾';
+    navLogo.src    = theme === 'dark' ? logoDarkSrc  : logoLightSrc;
+    footerLogo.src = theme === 'dark' ? logoDarkSrc  : logoLightSrc;
+    localStorage.setItem('airside-theme', theme);
+  }
+
+  const saved = localStorage.getItem('airside-theme') ||
+    (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  applyTheme(saved);
+
+  toggle.addEventListener('click', () => {
+    applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+  });
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
