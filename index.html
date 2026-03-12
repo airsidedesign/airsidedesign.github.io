@@ -875,10 +875,13 @@
     }
 
     const groups = {};
-    airports.forEach(a => {
-      if (!groups[a.series]) groups[a.series] = [];
-      groups[a.series].push(a);
-    });
+   airports.forEach(a => {
+  const seriesList = Array.isArray(a.series) ? a.series : [a.series];
+  seriesList.forEach(s => {
+    if (!groups[s]) groups[s] = [];
+    groups[s].push(a);
+  });
+});
 
     container.innerHTML = '';
     const suffix = getCoasterSuffix();
