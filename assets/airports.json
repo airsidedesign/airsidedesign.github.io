@@ -1,8 +1,0 @@
-[
-  { "iata": "FRA", "icao": "EDDF", "city": "Frankfurt",   "series": "germany" },
-  { "iata": "MUC", "icao": "EDDM", "city": "Munich",      "series": "germany" },
-  { "iata": "BER", "icao": "EDDB", "city": "Berlin",      "series": "germany" },
-  { "iata": "DUS", "icao": "EDDL", "city": "Düsseldorf",  "series": "germany" },
-  { "iata": "HAM", "icao": "EDDH", "city": "Hamburg",     "series": "germany" },
-  { "iata": "CGN", "icao": "EDDK", "city": "Cologne",     "series": "germany" }
-]
