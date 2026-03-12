@@ -9,21 +9,24 @@
   <style>
     /* ── TOKENS ── */
     :root {
-      --bg:         #060E1C;
-      --text:       #C8D4E8;
-      --text-dim:   #8899BB;
-      --accent:     #E8A020;
-      --border:     rgba(200,212,232,0.1);
-      --card-bg:    rgba(200,212,232,0.04);
+      --bg:       #060E1C;
+      --text:     #C8D4E8;
+      --text-dim: #8899BB;
+      --accent:   #E8A020;
+      --border:   rgba(200,212,232,0.1);
+      --card-bg:  rgba(200,212,232,0.04);
       --logo-filter: none;
     }
+    [data-theme="dark"] h1,
+    [data-theme="dark"] h2 { color: #FFFFFF; }
+
     [data-theme="light"] {
-      --bg:         #F2EDE3;
-      --text:       #060E1C;
-      --text-dim:   #5a6580;
-      --accent:     #E8A020;
-      --border:     rgba(6,14,28,0.12);
-      --card-bg:    rgba(6,14,28,0.04);
+      --bg:       #F2EDE3;
+      --text:     #060E1C;
+      --text-dim: #5a6580;
+      --accent:   #E8A020;
+      --border:   rgba(6,14,28,0.12);
+      --card-bg:  rgba(6,14,28,0.04);
       --logo-filter: none;
     }
 
@@ -260,33 +263,74 @@
     }
     .coasters-header .section-text { max-width: 48ch; }
 
-    /* airport grid */
+    /* ── AIRPORT GRID ── */
+    .series-block { margin-bottom: 3.5rem; }
+    .series-title {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.2rem;
+    }
     .airport-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 1.2rem;
-      margin-bottom: 3rem;
     }
+    @media(max-width:900px) { .airport-grid { grid-template-columns: repeat(3,1fr); } }
+    @media(max-width:480px) { .airport-grid { grid-template-columns: repeat(2,1fr); } }
+
+    /* fade card */
     .airport-card {
       aspect-ratio: 1;
-      background: var(--bg);
-      border: 1px solid var(--border);
       border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color 0.25s, background 0.35s;
+    }
+    .airport-card:hover {
+      border-color: var(--accent);
+      background: #F2EDE3;
+    }
+    .airport-card-front {
+      position: absolute; inset: 0;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      transition: border-color 0.2s;
-      cursor: default;
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
-    .airport-card:hover { border-color: var(--accent); }
+    .airport-card:hover .airport-card-front {
+      opacity: 0; transform: scale(0.85);
+    }
     .airport-iata {
-      font-size: 1.4rem; font-weight: 900;
-      letter-spacing: 0.05em;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      font-weight: 900; letter-spacing: 0.05em;
     }
     .airport-city {
-      font-size: 0.6rem; font-weight: 300;
+      font-size: 0.55rem; font-weight: 300;
       letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--text-dim); margin-top: 0.1rem;
+      color: var(--text-dim); margin-top: 0.15rem;
     }
+    .airport-card-back {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: scale(1.1);
+      transition: opacity 0.35s ease 0.05s, transform 0.35s ease 0.05s;
+    }
+    .airport-card:hover .airport-card-back {
+      opacity: 1; transform: scale(1);
+    }
+    .airport-card-back img {
+      width: 82%; height: 82%;
+      object-fit: contain;
+    }
+    /* no-image fallback: stays as text card */
+    .airport-card.no-img:hover { background: var(--bg); }
+    .airport-card.no-img:hover .airport-card-front {
+      opacity: 1; transform: none;
+    }
+    .airport-card.no-img { cursor: default; }
+
     .coasters-coming {
       font-size: 0.75rem; font-weight: 400;
       letter-spacing: 0.15em; text-transform: uppercase;
@@ -397,6 +441,9 @@
     }
     footer img { height: 64px; opacity: 0.6; }
 
+    [data-theme="dark"] h1,
+    [data-theme="dark"] h2 { color: #FFFFFF; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       #hero { grid-template-columns: 1fr; padding-top: 80px; }
@@ -436,10 +483,6 @@
       width: 4px; height: 2px;
       background: var(--text-dim); border-radius: 1px;
     }
-
-    h1, h2 {
-  color: #FFFFFF;
-}
   </style>
 </head>
 <body>
@@ -557,15 +600,8 @@
       </div>
     </div>
 
-    <p class="section-tag fade-up">Germany</p>
-    <div class="airport-grid fade-up" style="transition-delay:0.05s">
-      <div class="airport-card"><span class="airport-iata">FRA</span><span class="airport-city">Frankfurt</span></div>
-      <div class="airport-card"><span class="airport-iata">MUC</span><span class="airport-city">Munich</span></div>
-      <div class="airport-card"><span class="airport-iata">BER</span><span class="airport-city">Berlin</span></div>
-      <div class="airport-card"><span class="airport-iata">DUS</span><span class="airport-city">Düsseldorf</span></div>
-      <div class="airport-card"><span class="airport-iata">HAM</span><span class="airport-city">Hamburg</span></div>
-      <div class="airport-card"><span class="airport-iata">CGN</span><span class="airport-city">Cologne</span></div>
-    </div>
+    <!-- Dynamically rendered by airports.json -->
+    <div id="airport-series-container" class="fade-up" style="transition-delay:0.05s"></div>
 
     <div class="coaster-photos fade-up">
       <!-- PRODUCT PHOTO: Ceramic coaster top view -->
@@ -779,8 +815,8 @@
   const footerLogo = document.getElementById('footer-logo');
 
   // Point to the SVG files (for GH Pages these would be in /assets/)
-  const logoDarkSrc  = '/images/Logo_long_dark_transparent.svg';
-  const logoLightSrc = '/images/Logo_long_light_transparent.svg';
+  const logoDarkSrc  = '/assets/Logo_long_dark_transparent.svg';
+  const logoLightSrc = '/assets/Logo_long_light_transparent.svg';
 
   function applyTheme(theme) {
     html.dataset.theme = theme;
@@ -798,7 +834,75 @@
     applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
   });
 
-  // Scroll animations
+  // ── AIRPORT GRID — JSON-driven ──
+  const SERIES_LABELS = {
+    'germany':       'German Airports',
+    'europe':        'European Airports',
+    'north-america': 'North America',
+    'south-america': 'South America',
+    'asia':          'Asia',
+    'africa':        'Africa',
+    'oceania':       'Oceania',
+    'middle-east':   'Middle East',
+  };
+
+  async function renderAirports() {
+    const container = document.getElementById('airport-series-container');
+    if (!container) return;
+
+    let airports = [];
+    try {
+      const res = await fetch('assets/airports.json');
+      airports = await res.json();
+    } catch(e) {
+      console.warn('airports.json not found, skipping grid render.');
+      return;
+    }
+
+    // Group by series
+    const groups = {};
+    airports.forEach(a => {
+      if (!groups[a.series]) groups[a.series] = [];
+      groups[a.series].push(a);
+    });
+
+    container.innerHTML = '';
+
+    Object.entries(groups).forEach(([series, list]) => {
+      const label = SERIES_LABELS[series] || series;
+
+      // Check each airport for a PNG — build cards
+      const cards = list.map(a => {
+        const imgPath = `assets/coasters/${a.iata}.png`;
+        // We render an img tag; if it 404s we add .no-img class via onerror
+        return `
+          <div class="airport-card" id="card-${a.iata}">
+            <div class="airport-card-front">
+              <span class="airport-iata">${a.iata}</span>
+              <span class="airport-city">${a.city}</span>
+            </div>
+            <div class="airport-card-back">
+              <img
+                src="${imgPath}"
+                alt="${a.iata} airport chart"
+                onerror="this.closest('.airport-card').classList.add('no-img'); this.style.display='none';"
+              />
+            </div>
+          </div>`;
+      }).join('');
+
+      container.insertAdjacentHTML('beforeend', `
+        <div class="series-block">
+          <p class="series-title">${label}</p>
+          <div class="airport-grid">${cards}</div>
+        </div>
+      `);
+    });
+  }
+
+  renderAirports();
+
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
