@@ -834,7 +834,7 @@
     applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
   });
 
-  // ── AIRPORT GRID — inline data, no fetch needed ──
+  // ── AIRPORT GRID — JSON-driven ──
   const SERIES_LABELS = {
     'germany':       'Germany',
     'europe':        'Europe',
@@ -846,21 +846,21 @@
     'middle-east':   'Middle East',
   };
 
-  const AIRPORTS = [
-    { iata: 'FRA', icao: 'EDDF', city: 'Frankfurt',  series: 'germany' },
-    { iata: 'MUC', icao: 'EDDM', city: 'Munich',     series: 'germany' },
-    { iata: 'BER', icao: 'EDDB', city: 'Berlin',     series: 'germany' },
-    { iata: 'DUS', icao: 'EDDL', city: 'Düsseldorf', series: 'germany' },
-    { iata: 'HAM', icao: 'EDDH', city: 'Hamburg',    series: 'germany' },
-    { iata: 'CGN', icao: 'EDDK', city: 'Cologne',    series: 'germany' },
-  ];
-
-  function renderAirports() {
+  async function renderAirports() {
     const container = document.getElementById('airport-series-container');
     if (!container) return;
 
+    let airports = [];
+    try {
+      const res = await fetch('assets/airports.json');
+      airports = await res.json();
+    } catch(e) {
+      console.warn('airports.json not found, skipping grid render.');
+      return;
+    }
+
     const groups = {};
-    AIRPORTS.forEach(a => {
+    airports.forEach(a => {
       if (!groups[a.series]) groups[a.series] = [];
       groups[a.series].push(a);
     });
@@ -895,9 +895,6 @@
         </div>
       `);
     });
-
-    // Re-run scroll observer for newly created elements
-    document.querySelectorAll('#airport-series-container .fade-up').forEach(el => observer.observe(el));
   }
 
   renderAirports();
