@@ -320,9 +320,18 @@
     .airport-card:hover .airport-card-back {
       opacity: 1; transform: scale(1);
     }
+    /* PNG is white — recolor per theme */
+    /* Dark mode → #C8D4E8 (light steel blue) */
     .airport-card-back img {
       width: 82%; height: 82%;
       object-fit: contain;
+      filter: brightness(0) invert(1)
+              sepia(1) saturate(0.25) hue-rotate(185deg) brightness(0.92);
+    }
+    /* Light mode → #2C2C3A (dark navy) */
+    [data-theme="light"] .airport-card-back img {
+      filter: brightness(0)
+              invert(14%) sepia(12%) saturate(600%) hue-rotate(200deg) brightness(1);
     }
     /* no-image fallback: stays as text card */
     .airport-card.no-img:hover { background: var(--bg); }
@@ -815,8 +824,8 @@
   const footerLogo = document.getElementById('footer-logo');
 
   // Point to the SVG files (for GH Pages these would be in /assets/)
-  const logoDarkSrc  = '/assets/Logo_long_dark_transparent.svg';
-  const logoLightSrc = '/assets/Logo_long_light_transparent.svg';
+  const logoDarkSrc  = 'assets/Logo_long_dark_transparent.svg';
+  const logoLightSrc = 'assets/Logo_long_light_transparent.svg';
 
   function applyTheme(theme) {
     html.dataset.theme = theme;
