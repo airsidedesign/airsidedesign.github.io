@@ -815,8 +815,8 @@
   const footerLogo = document.getElementById('footer-logo');
 
   // Point to the SVG files (for GH Pages these would be in /assets/)
-  const logoDarkSrc  = '/assets/Logo_long_dark_transparent.svg';
-  const logoLightSrc = '/assets/Logo_long_light_transparent.svg';
+  const logoDarkSrc  = '/images/Logo_long_dark_transparent.svg';
+  const logoLightSrc = '/images/Logo_long_light_transparent.svg';
 
   function applyTheme(theme) {
     html.dataset.theme = theme;
@@ -834,10 +834,10 @@
     applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
   });
 
-  // ── AIRPORT GRID — JSON-driven ──
+  // ── AIRPORT GRID — inline data, no fetch needed ──
   const SERIES_LABELS = {
-    'germany':       'German Airports',
-    'europe':        'European Airports',
+    'germany':       'Germany',
+    'europe':        'Europe',
     'north-america': 'North America',
     'south-america': 'South America',
     'asia':          'Asia',
@@ -846,22 +846,21 @@
     'middle-east':   'Middle East',
   };
 
-  async function renderAirports() {
+  const AIRPORTS = [
+    { iata: 'FRA', icao: 'EDDF', city: 'Frankfurt',  series: 'germany' },
+    { iata: 'MUC', icao: 'EDDM', city: 'Munich',     series: 'germany' },
+    { iata: 'BER', icao: 'EDDB', city: 'Berlin',     series: 'germany' },
+    { iata: 'DUS', icao: 'EDDL', city: 'Düsseldorf', series: 'germany' },
+    { iata: 'HAM', icao: 'EDDH', city: 'Hamburg',    series: 'germany' },
+    { iata: 'CGN', icao: 'EDDK', city: 'Cologne',    series: 'germany' },
+  ];
+
+  function renderAirports() {
     const container = document.getElementById('airport-series-container');
     if (!container) return;
 
-    let airports = [];
-    try {
-      const res = await fetch('assets/airports.json');
-      airports = await res.json();
-    } catch(e) {
-      console.warn('airports.json not found, skipping grid render.');
-      return;
-    }
-
-    // Group by series
     const groups = {};
-    airports.forEach(a => {
+    AIRPORTS.forEach(a => {
       if (!groups[a.series]) groups[a.series] = [];
       groups[a.series].push(a);
     });
@@ -871,10 +870,8 @@
     Object.entries(groups).forEach(([series, list]) => {
       const label = SERIES_LABELS[series] || series;
 
-      // Check each airport for a PNG — build cards
       const cards = list.map(a => {
         const imgPath = `assets/coasters/${a.iata}.png`;
-        // We render an img tag; if it 404s we add .no-img class via onerror
         return `
           <div class="airport-card" id="card-${a.iata}">
             <div class="airport-card-front">
@@ -898,6 +895,9 @@
         </div>
       `);
     });
+
+    // Re-run scroll observer for newly created elements
+    document.querySelectorAll('#airport-series-container .fade-up').forEach(el => observer.observe(el));
   }
 
   renderAirports();
