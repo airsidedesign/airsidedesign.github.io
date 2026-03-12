@@ -321,17 +321,10 @@
     .airport-card:hover .airport-card-back {
       opacity: 1; transform: scale(1);
     }
-    /* PNG is white — recolor to match --text per theme */
-    /* Dark mode → #C8D4E8 */
+    /* Two PNG variants per theme, no filter needed */
     .airport-card-back img {
       width: 82%; height: 82%;
       object-fit: contain;
-      filter: brightness(0) invert(1)
-              sepia(1) saturate(0.27) hue-rotate(220deg) brightness(0.63);
-    }
-    /* Light mode → #060E1C */
-    [data-theme="light"] .airport-card-back img {
-      filter: brightness(0);
     }
     /* no-image fallback: stays as text card */
     .airport-card.no-img:hover { background: var(--bg); }
@@ -833,6 +826,7 @@
     navLogo.src    = theme === 'dark' ? logoDarkSrc  : logoLightSrc;
     footerLogo.src = theme === 'dark' ? logoDarkSrc  : logoLightSrc;
     localStorage.setItem('airside-theme', theme);
+    updateCoasterImages();
   }
 
   const saved = localStorage.getItem('airside-theme') ||
@@ -855,6 +849,18 @@
     'middle-east':   'Middle East',
   };
 
+  function getCoasterSuffix() {
+    return document.documentElement.dataset.theme === 'light' ? '_light' : '_dark';
+  }
+
+  function updateCoasterImages() {
+    const suffix = getCoasterSuffix();
+    document.querySelectorAll('.airport-card-back img').forEach(img => {
+      const iata = img.dataset.iata;
+      img.src = `assets/coasters/${iata}${suffix}.png`;
+    });
+  }
+
   async function renderAirports() {
     const container = document.getElementById('airport-series-container');
     if (!container) return;
@@ -875,12 +881,13 @@
     });
 
     container.innerHTML = '';
+    const suffix = getCoasterSuffix();
 
     Object.entries(groups).forEach(([series, list]) => {
       const label = SERIES_LABELS[series] || series;
 
       const cards = list.map(a => {
-        const imgPath = `assets/coasters/${a.iata}.png`;
+        const imgPath = `assets/coasters/${a.iata}${suffix}.png`;
         return `
           <div class="airport-card" id="card-${a.iata}">
             <div class="airport-card-front">
@@ -890,6 +897,7 @@
             <div class="airport-card-back">
               <img
                 src="${imgPath}"
+                data-iata="${a.iata}"
                 alt="${a.iata} airport chart"
                 onerror="this.closest('.airport-card').classList.add('no-img'); this.style.display='none';"
               />
