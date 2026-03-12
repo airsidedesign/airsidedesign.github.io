@@ -305,6 +305,7 @@
     .airport-iata {
       font-size: clamp(1rem, 2vw, 1.4rem);
       font-weight: 900; letter-spacing: 0.05em;
+      color: var(--text-dim);
     }
     .airport-city {
       font-size: 0.55rem; font-weight: 300;
@@ -320,18 +321,17 @@
     .airport-card:hover .airport-card-back {
       opacity: 1; transform: scale(1);
     }
-    /* PNG is white — recolor per theme */
-    /* Dark mode → #C8D4E8 (light steel blue) */
+    /* PNG is white — recolor to match --text per theme */
+    /* Dark mode → #C8D4E8 */
     .airport-card-back img {
       width: 82%; height: 82%;
       object-fit: contain;
       filter: brightness(0) invert(1)
               sepia(1) saturate(0.25) hue-rotate(185deg) brightness(0.92);
     }
-    /* Light mode → #2C2C3A (dark navy) */
+    /* Light mode → #060E1C */
     [data-theme="light"] .airport-card-back img {
-      filter: brightness(0)
-              invert(14%) sepia(12%) saturate(600%) hue-rotate(200deg) brightness(1);
+      filter: brightness(0);
     }
     /* no-image fallback: stays as text card */
     .airport-card.no-img:hover { background: var(--bg); }
